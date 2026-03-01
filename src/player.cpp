@@ -5,6 +5,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <poll.h>
+#include <fcntl.h>
 
 Player::Player(int port) : port_(port) {
 }
@@ -47,10 +48,6 @@ Socket Player::connectToNeighbor(const Player::PlayerInfo & info) {
 }
 
 void Player::connectToNeighbors(const std::vector<Player::PlayerInfo> & neighborInfos) {
-    struct pollfd pfd;
-    pfd.fd = mySocket.get_fd();
-    pfd.events = POLLIN;
-
     if (numPlayers == 2) {
         PlayerInfo neighbor = neighborInfos[0];
         if (my_id == 1) {
@@ -64,16 +61,12 @@ void Player::connectToNeighbors(const std::vector<Player::PlayerInfo> & neighbor
         PlayerInfo rightNeighbor = neighborInfos[0];
         PlayerInfo leftNeighbor = neighborInfos[1];
         
-        if (my_id == 0) {
+        if (my_id == 1) {
             rightPlayer = std::move(connectToNeighbor(rightNeighbor));
-            if (::poll(&pfd, 1, 1000) > 0) {
-                leftPlayer = std::move(acceptNeighborConnection(leftNeighbor));
-            }
+            leftPlayer = std::move(acceptNeighborConnection(leftNeighbor));
         }
         else {
-            if (::poll(&pfd, 1, 1000) > 0) {
-                leftPlayer = std::move(acceptNeighborConnection(leftNeighbor));
-            }
+            leftPlayer = std::move(acceptNeighborConnection(leftNeighbor));
             rightPlayer = std::move(connectToNeighbor(rightNeighbor));
         }
     }
