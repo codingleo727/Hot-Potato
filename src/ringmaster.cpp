@@ -118,8 +118,9 @@ int Ringmaster::startGame(int numHops) {
     std::cout << "Potato Ringmaster\n";
     std::cout << "Players = " << numPlayers << std::endl;
     std::cout << "Hops = " << numHops << std::endl;
+    std::cout << "Double check\n";
     openListeningSocket();
-    std::cerr << "Waiting for players to connect on port " << port_ << "...\n";
+    std::cout << "Waiting for players to connect on port " << port_ << "...\n";
     initializePlayers();
     sendInfoToPlayers();
 
