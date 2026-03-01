@@ -32,15 +32,9 @@ void Player::getPort() {
     if (::getsockname(mySocket.get_fd(), (struct sockaddr *) &addr, &addr_len) < 0) {
         throw std::runtime_error("getsockname failed");
     }
-    if (addr.ss_family == AF_INET) {
-        struct sockaddr_in * addr_in = (struct sockaddr_in *) &addr;
-        port_ = ntohs(addr_in->sin_port);
-    } else if (addr.ss_family == AF_INET6) {
-        struct sockaddr_in6 * addr_in6 = (struct sockaddr_in6 *) &addr;
-        port_ = ntohs(addr_in6->sin6_port);
-    } else {
-        throw std::runtime_error("Unknown address family");
-    }
+    
+    struct sockaddr_in * addr_in = (struct sockaddr_in *) &addr;
+    port_ = ntohs(addr_in->sin_port);
 }
 
 void Player::connectToRingmaster(const std::string & ringmasterAddress, std::uint16_t ringmaster_port) {
@@ -78,19 +72,10 @@ Socket Player::acceptNeighborConnection(const Player::PlayerInfo & neighborInfo)
         throw std::runtime_error("accept failed");
     }
     std::string neighbor_ip_str;
-    if (neighbor_addr.ss_family == AF_INET) {
-        struct sockaddr_in * addr_in = (struct sockaddr_in *) & neighbor_addr;
-        char ip_str[INET_ADDRSTRLEN];
-        inet_ntop(AF_INET, &addr_in->sin_addr, ip_str, sizeof(ip_str));
-        neighbor_ip_str = ip_str;
-    } else if (neighbor_addr.ss_family == AF_INET6) {
-        struct sockaddr_in6 * addr_in6 = (struct sockaddr_in6 *) & neighbor_addr;
-        char ip_str[INET6_ADDRSTRLEN];
-        inet_ntop(AF_INET6, &addr_in6->sin6_addr, ip_str, sizeof(ip_str));
-        neighbor_ip_str = ip_str;
-    } else {
-        throw std::runtime_error("Unknown address family");
-    }
+    struct sockaddr_in * addr_in = (struct sockaddr_in *) & neighbor_addr;
+    char ip_str[INET_ADDRSTRLEN];
+    inet_ntop(AF_INET, &addr_in->sin_addr, ip_str, sizeof(ip_str));
+    neighbor_ip_str = ip_str;
     
     if (neighbor_ip_str != neighborInfo.address) {
         std::cerr << "Accepted connection from unexpected IP address: " << neighbor_ip_str << " while expecting: " << neighborInfo.address << std::endl;

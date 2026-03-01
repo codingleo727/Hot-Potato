@@ -122,7 +122,7 @@ Socket Socket::connectToServer(const std::string & server, std::uint16_t port) {
 
 void Socket::connect(const std::string & server, std::uint16_t port) {
   addrinfo hints{}, *res, *p;
-  hints.ai_family = AF_UNSPEC;
+  hints.ai_family = AF_INET;
   hints.ai_socktype = SOCK_STREAM;
 
   if (port == 0) {

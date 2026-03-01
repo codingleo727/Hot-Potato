@@ -22,24 +22,16 @@ Ringmaster::PlayerConnection Ringmaster::acceptPlayer() {
 
     struct sockaddr_storage player_addr;
     socklen_t player_addr_len = sizeof(player_addr);
-    std::cerr << "Waiting for a player to connect...\n";
     int player_fd = ::accept(mySocket.get_fd(), (struct sockaddr *) &player_addr, &player_addr_len);
-    std::cerr << "A player has connected.\n";
     if (player_fd < 0) {
         throw std::runtime_error("accept failed");
     }
     pc.playerSocket = Socket(player_fd);
 
     char ip_str[INET6_ADDRSTRLEN];
-    if (player_addr.ss_family == AF_INET) {
-        struct sockaddr_in * addr_in = (struct sockaddr_in *) &player_addr;
-        inet_ntop(AF_INET, &addr_in->sin_addr, ip_str, sizeof(ip_str));
-    } else if (player_addr.ss_family == AF_INET6) {
-        struct sockaddr_in6 * addr_in6 = (struct sockaddr_in6 *) &player_addr;
-        inet_ntop(AF_INET6, &addr_in6->sin6_addr, ip_str, sizeof(ip_str));
-    } else {
-        throw std::runtime_error("Unknown address family");
-    }
+    struct sockaddr_in * addr_in = (struct sockaddr_in *) &player_addr;
+    inet_ntop(AF_INET, &addr_in->sin_addr, ip_str, sizeof(ip_str));
+
     pc.address = ip_str;
 
     return pc;
@@ -47,9 +39,7 @@ Ringmaster::PlayerConnection Ringmaster::acceptPlayer() {
 
 void Ringmaster::initializePlayers() {
     for (int i = 0; i < numPlayers; ++i) {
-        std::cerr << "Waiting for player " << i + 1 << " to connect...\n"; // Convert to 1-based player ID for printing
         PlayerConnection pc = acceptPlayer();
-        std::cerr << "Player " << i + 1 << " connected from " << pc.address << "\n"; // Convert to 1-based player ID for printing
 
         uint16_t player_port_net;
         char * buf = reinterpret_cast<char *>(&player_port_net);
@@ -60,7 +50,7 @@ void Ringmaster::initializePlayers() {
 
         playerSockets.push_back(std::move(pc.playerSocket));
 
-        std::cout << "Player " << i + 1 << " is ready to play\n"; // Convert to 1-based player ID for printing
+        std::cout << "Player " << i + 1<< " is ready to play\n"; // Convert to 1-based player ID for printing
     }
 }
 
@@ -131,7 +121,7 @@ int Ringmaster::startGame(int numHops) {
     }
     Potato potato = createPotato(numHops);
     int startingPlayer = sendPotato(potato);
-    std::cout << "Ready to start the game, sending potato to player " << startingPlayer + 1 << "\n"; // Convert to 1-based player ID for printing
+    std::cout << "Ready to start the game, sending potato to player " << startingPlayer + 1<< "\n"; // Convert to 1-based player ID for printing
     return 1;
 }
 
