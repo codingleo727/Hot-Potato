@@ -58,12 +58,12 @@ void Player::connectToNeighbors(const std::vector<Player::PlayerInfo> & neighbor
         }
     } else if (numPlayers > 2) {
         PlayerInfo rightNeighbor = neighborInfos[0];
-        std::cerr << "Connecting to right neighbor at " << rightNeighbor.address << ":" << rightNeighbor.port << "\n";
         rightPlayer = std::move(connectToNeighbor(rightNeighbor));
+        std::cerr << "Connected to right neighbor at " << rightNeighbor.address << ":" << rightNeighbor.port << "\n";
 
         PlayerInfo leftNeighbor = neighborInfos[1];
-        std::cerr << "Waiting for left neighbor to connect at " << leftNeighbor.address << ":" << leftNeighbor.port << "\n";
         leftPlayer = std::move(acceptNeighborConnection(leftNeighbor));
+        std::cerr << "Connected to left neighbor at " << leftNeighbor.address << ":" << leftNeighbor.port << "\n";
     }
 }
 
