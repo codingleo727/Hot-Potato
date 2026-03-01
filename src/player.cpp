@@ -21,6 +21,8 @@ void Player::start(const std::string & ringmasterAddress, std::uint16_t ringmast
     std::cerr << "Connected to ringmaster at " << port_ << "\n";
     sendInfoToRingmaster();
     neighborInfos = receiveInfoFromRingmaster();
+    std::cerr << neighborInfos[0].id << " " << neighborInfos[0].address << " " << neighborInfos[0].port << "\n";
+    std::cerr << neighborInfos[1].id << " " << neighborInfos[1].address << " " << neighborInfos[1].port << "\n";
     connectToNeighbors(neighborInfos);
 }
 
