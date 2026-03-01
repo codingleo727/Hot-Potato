@@ -61,6 +61,7 @@ void Player::connectToNeighbors(const std::vector<Player::PlayerInfo> & neighbor
         rightPlayer = std::move(connectToNeighbor(rightNeighbor));
 
         PlayerInfo leftNeighbor = neighborInfos[1];
+        std::cerr << "Waiting for left neighbor to connect at " << leftNeighbor.address << ":" << leftNeighbor.port << "\n";
         leftPlayer = std::move(acceptNeighborConnection(leftNeighbor));
     }
 }
