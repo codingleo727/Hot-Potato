@@ -50,7 +50,7 @@ void Ringmaster::initializePlayers() {
 
         playerSockets.push_back(std::move(pc.playerSocket));
 
-        std::cout << "Player " << i + 1<< " is ready to play\n"; // Convert to 1-based player ID for printing
+        std::cout << "Player " << i + 1 << " is ready to play\n"; // Convert to 1-based player ID for printing
     }
 }
 
@@ -121,7 +121,7 @@ int Ringmaster::startGame(int numHops) {
     }
     Potato potato = createPotato(numHops);
     int startingPlayer = sendPotato(potato);
-    std::cout << "Ready to start the game, sending potato to player " << startingPlayer + 1<< "\n"; // Convert to 1-based player ID for printing
+    std::cout << "Ready to start the game, sending potato to player " << startingPlayer + 1 << "\n"; // Convert to 1-based player ID for printing
     return 1;
 }
 
