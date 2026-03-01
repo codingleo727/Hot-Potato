@@ -17,6 +17,7 @@ void Player::start(const std::string & ringmasterAddress, std::uint16_t ringmast
     openListeningSocket();
     getPort();
     connectToRingmaster(ringmasterAddress, ringmasterPort);
+    std::cerr << "Connected to ringmaster at " << port_ << "\n";
     sendInfoToRingmaster();
     neighborInfos = receiveInfoFromRingmaster();
     connectToNeighbors(neighborInfos);
