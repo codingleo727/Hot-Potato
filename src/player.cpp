@@ -47,6 +47,12 @@ Socket Player::connectToNeighbor(const Player::PlayerInfo & info) {
 }
 
 void Player::connectToNeighbors(const std::vector<Player::PlayerInfo> & neighborInfos) {
+    struct pollfd pfd;
+    pfd.fd = mySocket.get_fd();
+    pfd.events = POLLIN;
+
+    int status = ::poll(&pfd, 1, 1000);
+
     if (numPlayers == 2) {
         PlayerInfo neighbor = neighborInfos[0];
         if (my_id == 1) {
@@ -62,10 +68,14 @@ void Player::connectToNeighbors(const std::vector<Player::PlayerInfo> & neighbor
         
         if (my_id % 2 == 0) {
             rightPlayer = std::move(connectToNeighbor(rightNeighbor));
-            leftPlayer = std::move(acceptNeighborConnection(leftNeighbor));
+            if (status > 0) {
+                leftPlayer = std::move(acceptNeighborConnection(leftNeighbor));
+            }
         }
         else {
-            leftPlayer = std::move(acceptNeighborConnection(leftNeighbor));
+            if (status > 0) {
+                leftPlayer = std::move(acceptNeighborConnection(leftNeighbor));
+            }
             rightPlayer = std::move(connectToNeighbor(rightNeighbor));
         }
     }
