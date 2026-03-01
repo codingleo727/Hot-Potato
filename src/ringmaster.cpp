@@ -22,7 +22,9 @@ Ringmaster::PlayerConnection Ringmaster::acceptPlayer() {
 
     struct sockaddr_storage player_addr;
     socklen_t player_addr_len = sizeof(player_addr);
+    std::cerr << "Waiting for a player to connect...\n";
     int player_fd = ::accept(mySocket.get_fd(), (struct sockaddr *) &player_addr, &player_addr_len);
+    std::cerr << "A player has connected.\n";
     if (player_fd < 0) {
         throw std::runtime_error("accept failed");
     }
@@ -47,6 +49,7 @@ void Ringmaster::initializePlayers() {
     for (int i = 0; i < numPlayers; ++i) {
         std::cerr << "Waiting for player " << i + 1 << " to connect...\n"; // Convert to 1-based player ID for printing
         PlayerConnection pc = acceptPlayer();
+        std::cerr << "Player " << i + 1 << " connected from " << pc.address << "\n"; // Convert to 1-based player ID for printing
 
         uint16_t player_port_net;
         char * buf = reinterpret_cast<char *>(&player_port_net);
@@ -118,9 +121,7 @@ int Ringmaster::startGame(int numHops) {
     std::cout << "Potato Ringmaster\n";
     std::cout << "Players = " << numPlayers << std::endl;
     std::cout << "Hops = " << numHops << std::endl;
-    std::cout << "Double check\n";
     openListeningSocket();
-    std::cout << "Waiting for players to connect on port " << port_ << "...\n";
     initializePlayers();
     sendInfoToPlayers();
 
