@@ -57,10 +57,16 @@ void Player::connectToNeighbors(const std::vector<Player::PlayerInfo> & neighbor
         }
     } else if (numPlayers > 2) {
         PlayerInfo rightNeighbor = neighborInfos[0];
-        rightPlayer = std::move(connectToNeighbor(rightNeighbor));
-
         PlayerInfo leftNeighbor = neighborInfos[1];
-        leftPlayer = std::move(acceptNeighborConnection(leftNeighbor));
+
+        if (my_id == 0) {
+            rightPlayer = std::move(connectToNeighbor(rightNeighbor));
+            leftPlayer = std::move(acceptNeighborConnection(leftNeighbor));
+        }
+        else {
+            leftPlayer = std::move(acceptNeighborConnection(leftNeighbor));
+            rightPlayer = std::move(connectToNeighbor(rightNeighbor));
+        }
     }
 }
 
