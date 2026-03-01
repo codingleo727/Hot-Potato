@@ -107,7 +107,7 @@ void Socket::listen(std::uint16_t port) {
 
   ::freeaddrinfo(res);
 
-  if (::listen(fd_, 10) < 0) {
+  if (::listen(fd_, 50) < 0) {
     ::close(fd_);
     fd_ = -1;
     throw std::runtime_error("listen failed");

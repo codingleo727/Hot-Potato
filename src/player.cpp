@@ -62,17 +62,11 @@ void Player::connectToNeighbors(const std::vector<Player::PlayerInfo> & neighbor
         
         if (my_id % 2 == 0) {
             rightPlayer = std::move(connectToNeighbor(rightNeighbor));
-            std::cerr << "Connected to right neighbor at " << rightNeighbor.address << ":" << rightNeighbor.port << "\n";
-
             leftPlayer = std::move(acceptNeighborConnection(leftNeighbor));
-            std::cerr << "Connected to left neighbor at " << leftNeighbor.address << ":" << leftNeighbor.port << "\n";
         }
         else {
             leftPlayer = std::move(acceptNeighborConnection(leftNeighbor));
-            std::cerr << "Connected to left neighbor at " << leftNeighbor.address << ":" << leftNeighbor.port << "\n";
-
             rightPlayer = std::move(connectToNeighbor(rightNeighbor));
-            std::cerr << "Connected to right neighbor at " << rightNeighbor.address << ":" << rightNeighbor.port << "\n";
         }
     }
 }
