@@ -64,7 +64,7 @@ void Player::connectToNeighbors(const std::vector<Player::PlayerInfo> & neighbor
         PlayerInfo rightNeighbor = neighborInfos[0];
         PlayerInfo leftNeighbor = neighborInfos[1];
         
-        if (my_id % 2 == 0) {
+        if (my_id == 0) {
             rightPlayer = std::move(connectToNeighbor(rightNeighbor));
             if (::poll(&pfd, 1, 1000) > 0) {
                 leftPlayer = std::move(acceptNeighborConnection(leftNeighbor));
