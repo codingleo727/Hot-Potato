@@ -73,7 +73,7 @@ Socket Socket::createListeningSocket(std::uint16_t port) {
 
 void Socket::listen(std::uint16_t port) {
   addrinfo hints{}, *res;
-  hints.ai_family = AF_UNSPEC;
+  hints.ai_family = AF_INET;
   hints.ai_socktype = SOCK_STREAM;
   hints.ai_flags = AI_PASSIVE;
 
