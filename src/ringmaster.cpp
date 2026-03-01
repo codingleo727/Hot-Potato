@@ -45,6 +45,7 @@ Ringmaster::PlayerConnection Ringmaster::acceptPlayer() {
 
 void Ringmaster::initializePlayers() {
     for (int i = 0; i < numPlayers; ++i) {
+        std::cerr << "Waiting for player " << i + 1 << " to connect...\n"; // Convert to 1-based player ID for printing
         PlayerConnection pc = acceptPlayer();
 
         uint16_t player_port_net;

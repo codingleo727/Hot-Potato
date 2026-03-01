@@ -45,7 +45,6 @@ void Player::getPort() {
 
 void Player::connectToRingmaster(const std::string & ringmasterAddress, std::uint16_t ringmaster_port) {
     ringmaster = Socket::connectToServer(ringmasterAddress, ringmaster_port);
-    std::cerr << "Connected to ringmaster at " << ringmasterAddress << ":" << ringmaster_port << "\n";
 }
 
 Socket Player::connectToNeighbor(const Player::PlayerInfo & info) {
