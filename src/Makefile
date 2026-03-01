@@ -18,3 +18,5 @@ player: player_main.o player.o Socket.o potato.o
 
 clean:
 	rm -f $(TARGET) *.o
+
+rebuild: clean all
