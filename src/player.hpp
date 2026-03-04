@@ -82,7 +82,7 @@ private:
      * and store it in the leftPlayer or rightPlayer member variable depending on whether the neighbor is the left or right neighbor.
      * @param neighborInfo the PlayerInfo struct containing the neighbor's IP address and port number
      */
-    Socket acceptNeighborConnection(const PlayerInfo & neighborInfo);
+    Socket acceptNeighborConnection();
     
     /**
      * Get the port number that the player is listening on. 

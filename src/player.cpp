@@ -50,31 +50,11 @@ Socket Player::connectToNeighbor(const Player::PlayerInfo & info) {
 }
 
 void Player::connectToNeighbors(const std::vector<Player::PlayerInfo> & neighborInfos) {
-    if (numPlayers == 2) {
-        PlayerInfo neighbor = neighborInfos[0];
-        if (my_id == 1) {
-            leftPlayer = std::move(acceptNeighborConnection(neighbor));
-            rightPlayer = std::move(connectToNeighbor(neighbor));
-        } else {
-            rightPlayer = std::move(connectToNeighbor(neighbor));
-            leftPlayer = std::move(acceptNeighborConnection(neighbor));
-        }
-    } else if (numPlayers > 2) {
-        PlayerInfo rightNeighbor = neighborInfos[0];
-        PlayerInfo leftNeighbor = neighborInfos[1];
-        
-        if (my_id == 1) {
-            rightPlayer = std::move(connectToNeighbor(rightNeighbor));
-            leftPlayer = std::move(acceptNeighborConnection(leftNeighbor));
-        }
-        else {
-            leftPlayer = std::move(acceptNeighborConnection(leftNeighbor));
-            rightPlayer = std::move(connectToNeighbor(rightNeighbor));
-        }
-    }
+    rightPlayer = connectToNeighbor(neighborInfos[0]);
+    leftPlayer = acceptNeighborConnection();
 }
 
-Socket Player::acceptNeighborConnection(const Player::PlayerInfo & neighborInfo) {
+Socket Player::acceptNeighborConnection() {
     struct sockaddr_storage neighbor_addr;
     socklen_t neighbor_addr_len = sizeof(neighbor_addr);
     int neighbor_fd = ::accept(mySocket.get_fd(), (struct sockaddr *) & neighbor_addr, & neighbor_addr_len);
@@ -86,10 +66,6 @@ Socket Player::acceptNeighborConnection(const Player::PlayerInfo & neighborInfo)
     char ip_str[INET_ADDRSTRLEN];
     inet_ntop(AF_INET, &addr_in->sin_addr, ip_str, sizeof(ip_str));
     neighbor_ip_str = ip_str;
-    
-    if (neighbor_ip_str != neighborInfo.address) {
-        std::cerr << "Accepted connection from unexpected IP address: " << neighbor_ip_str << " while expecting: " << neighborInfo.address << std::endl;
-    }
 
     return Socket(neighbor_fd);
 }
