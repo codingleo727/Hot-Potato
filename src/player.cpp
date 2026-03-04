@@ -71,7 +71,7 @@ void Player::connectToNeighbors(const std::vector<Player::PlayerInfo> & neighbor
                 leftPlayer = std::move(acceptNeighborConnection());
                 left_ready = true;
             }
-            if (!right_ready && (fds[1].revents & POLLIN)) {
+            if (!right_ready && (fds[1].revents & POLLOUT)) {
                 right_ready = true;
             }
         }
