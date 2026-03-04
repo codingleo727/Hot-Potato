@@ -63,7 +63,7 @@ public:
     * @param port the port number of the other server
     * @return a Socket object representing the connection to the other server
     */
-  static Socket connectToServer(const std::string & server, std::uint16_t port);
+  static Socket connectToServer(const std::string & server, std::uint16_t port, bool blocking);
   
   /**
     * Send all data in the buffer, blocking until all data is sent.

@@ -42,16 +42,40 @@ void Player::getPort() {
 }
 
 void Player::connectToRingmaster(const std::string & ringmasterAddress, std::uint16_t ringmaster_port) {
-    ringmaster = Socket::connectToServer(ringmasterAddress, ringmaster_port);
+    ringmaster = Socket::connectToServer(ringmasterAddress, ringmaster_port, true);
 }
 
 Socket Player::connectToNeighbor(const Player::PlayerInfo & info) {
-    return Socket::connectToServer(info.address, info.port);
+    return Socket::connectToServer(info.address, info.port, false);
+}
+
+void setNonBlocking(int fd) {
+    int flags = fcntl(fd, F_GETFL, 0);
+    fcntl(fd, F_SETFL, flags | O_NONBLOCK);
 }
 
 void Player::connectToNeighbors(const std::vector<Player::PlayerInfo> & neighborInfos) {
-    rightPlayer = connectToNeighbor(neighborInfos[0]);
-    leftPlayer = acceptNeighborConnection();
+    setNonBlocking(mySocket.get_fd());
+    rightPlayer = std::move(connectToNeighbor(neighborInfos[0]));
+
+    bool right_ready = false;
+    bool left_ready = false;
+    while (!right_ready || !left_ready) {
+        struct pollfd fds[2];
+        fds[0] = {mySocket.get_fd(), POLLIN, 0};
+        fds[1] = {rightPlayer.get_fd(), POLLIN, 0};
+
+        int ret = ::poll(fds, 2, -1);
+        if (ret > 0) {
+            if (!left_ready && (fds[0].revents & POLLIN)) {
+                leftPlayer = std::move(acceptNeighborConnection());
+                left_ready = true;
+            }
+            if (!right_ready && (fds[1].revents & POLLIN)) {
+                right_ready = true;
+            }
+        }
+    }
 }
 
 Socket Player::acceptNeighborConnection() {

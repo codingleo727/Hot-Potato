@@ -7,6 +7,7 @@
 #include <cstring>
 #include <stdexcept>
 #include <string>
+#include <fcntl.h>
 
 Socket::Socket() noexcept : fd_(-1) {
 }
@@ -114,9 +115,13 @@ void Socket::listen(std::uint16_t port) {
   }
 }
 
-Socket Socket::connectToServer(const std::string & server, std::uint16_t port) {
+Socket Socket::connectToServer(const std::string & server, std::uint16_t port, bool blocking) {
   Socket s;
   s.connect(server, port);
+  if (!blocking) {
+    int flags = fcntl(s.get_fd(), F_GETFL, 0);
+    fcntl(s.get_fd(), F_SETFL, flags | O_NONBLOCK);
+  }
   return s;
 }
 
