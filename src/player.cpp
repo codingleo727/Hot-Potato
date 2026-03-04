@@ -63,7 +63,7 @@ void Player::connectToNeighbors(const std::vector<Player::PlayerInfo> & neighbor
     while (!right_ready || !left_ready) {
         struct pollfd fds[2];
         fds[0] = {mySocket.get_fd(), POLLIN, 0};
-        fds[1] = {rightPlayer.get_fd(), POLLIN, 0};
+        fds[1] = {rightPlayer.get_fd(), POLLOUT, 0};
 
         int ret = ::poll(fds, 2, -1);
         if (ret > 0) {
