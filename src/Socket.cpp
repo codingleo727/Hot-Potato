@@ -117,15 +117,11 @@ void Socket::listen(std::uint16_t port) {
 
 Socket Socket::connectToServer(const std::string & server, std::uint16_t port, bool blocking) {
   Socket s;
-  s.connect(server, port);
-  if (!blocking) {
-    int flags = fcntl(s.get_fd(), F_GETFL, 0);
-    fcntl(s.get_fd(), F_SETFL, flags | O_NONBLOCK);
-  }
+  s.connect(server, port, blocking);
   return s;
 }
 
-void Socket::connect(const std::string & server, std::uint16_t port) {
+void Socket::connect(const std::string & server, std::uint16_t port, bool blocking) {
   addrinfo hints{}, *res, *p;
   hints.ai_family = AF_INET;
   hints.ai_socktype = SOCK_STREAM;
@@ -145,6 +141,12 @@ void Socket::connect(const std::string & server, std::uint16_t port) {
     if (new_fd < 0) {
       continue;
     }
+    
+    if (!blocking) {
+      int flags = fcntl(new_fd, F_GETFL, 0);
+      fcntl(new_fd, F_SETFL, flags | O_NONBLOCK);
+    }
+
     if (::connect(new_fd, p->ai_addr, p->ai_addrlen) == 0) {
       fd_ = new_fd;
       break;

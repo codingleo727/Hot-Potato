@@ -90,6 +90,6 @@ private:
     * @param server the hostname of the other server
     * @param port the port number of the other server
     */
-  void connect(const std::string & server, std::uint16_t port);
+  void connect(const std::string & server, std::uint16_t port, bool blocking);
 };
 #endif
