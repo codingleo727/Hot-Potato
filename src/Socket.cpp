@@ -141,13 +141,13 @@ void Socket::connect(const std::string & server, std::uint16_t port, bool blocki
     if (new_fd < 0) {
       continue;
     }
-    
+
     if (!blocking) {
       int flags = fcntl(new_fd, F_GETFL, 0);
       fcntl(new_fd, F_SETFL, flags | O_NONBLOCK);
     }
 
-    if (::connect(new_fd, p->ai_addr, p->ai_addrlen) == 0) {
+    if (::connect(new_fd, p->ai_addr, p->ai_addrlen) == 0 || (!blocking && errno == EINPROGRESS)) {
       fd_ = new_fd;
       break;
     }
